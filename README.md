@@ -157,6 +157,13 @@ https://stackoverflow.com/questions/54942488/how-to-change-the-internal-ip-of-ku
 添加 为 KUBELET_CONFIG_ARGS 添加--node-ip=192.168.56.102
 
 
+helm 3.0安装之后 要添加repo
+kedacore	https://kedacore.azureedge.net/helm
+stable  	http://mirror.azure.cn/kubernetes/charts
+
+# apphub    	https://apphub.aliyuncs.com
+
+
 
 
 
