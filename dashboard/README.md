@@ -11,7 +11,7 @@ kubectl create -f dashboard-admin.yaml
 kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep admin-user | awk '{print $1}')
 
 
-eyJhbGciOiJSUzI1NiIsImtpZCI6ImZXdE54OGhCZVRaY1NOTHF6V1ZnejZaaVB3TUllV0kzZzVyQ3VvemI3d0EifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlcm5ldGVzLWRhc2hib2FyZCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJhZG1pbi11c2VyLXRva2VuLWRjcmdwIiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQubmFtZSI6ImFkbWluLXVzZXIiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC51aWQiOiJmNzAwYjc4Yi1iOTU5LTRiNTMtYjUzNS05MTliNjBkMTE5YTUiLCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6a3ViZXJuZXRlcy1kYXNoYm9hcmQ6YWRtaW4tdXNlciJ9.j0VNl3emfHqj6p70fSLUCjvS3Q3oybsxxpXOAUBw-1CGRqQcSuiAg5QrnS51fnbE5ycaGoZgu9wDZniSJX2V2w7VYEQXLfkZJZVhN3AUojc3pKNqhzt0eIl60Bpldg8jcDav2ZOOezuBbdJTcY40t04bClCqrwZU-ngeEDAkZqyAIxjO8hKPX24wrsehzOa6kGOXm2lvph-lk7f346_eG9regb-mH8kpcW8ahguAnMTjBhouUll7i84ZQNE2iQ-AHdf2yL673zCa3UhoXAKy6wdKl7hFdj5XpD4hZ1YVpjIaHdmfgv-o8UMexH9i9pGjvB44SjWrEuSoFNHGGmPnlg
+eyJhbGciOiJSUzI1NiIsImtpZCI6ImZXdE54OGhCZVRaY1NOTHF6V1ZnejZaaVB3TUllV0kzZzVyQ3VvemI3d0EifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlcm5ldGVzLWRhc2hib2FyZCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJhZG1pbi11c2VyLXRva2VuLWJiYnI5Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQubmFtZSI6ImFkbWluLXVzZXIiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC51aWQiOiIyNjUxY2U4NC1mNmY2LTQwZGItYThmNi1kMzNlZmJmNzlmZWEiLCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6a3ViZXJuZXRlcy1kYXNoYm9hcmQ6YWRtaW4tdXNlciJ9.DgWvPpCflfhE6wJTx9b2Ymb3sgXCHDOFd0TleSuueVBuCSz4CgLIfdo7uwC32k4sGjoIapUIIsyTFezib4V9g2ZhW6i3iteSkNNezO7C9DypUMmoc2NdBDgPE-Htl5s80udll_aup0C_e8Q8Dl5yYdoxxQNKULBLLm3uR-o0BvnDS3xtCslaVSEON7vyTfIx8-R9-e8IAK03t5idJkSu1oSPpfheEoSTIju3X_0mBQ8KSunvFmjOflVSeDYstJZP7T52w0eqxEBsYF5rJsU9W8hibn0s29G7xTiotzCVD39TXyjqRDNpt3PMNKZTAxv6FKdu5pDmfIe00WfVV2D0FA
 
 ## get kubeconfig
 http://www.simlinux.com/2017/09/07/k8s-cfssl-install-cert.html
@@ -27,9 +27,6 @@ mkdir /opt/ssl
 cd /opt/ssl
 cfssl print-defaults config > ca-config.json
 cfssl print-defaults csr > ca-csr.json
-
-
-
 
 
 cat > kubernetes-csr.json <<EOF
@@ -84,6 +81,35 @@ cat > admin-csr.json <<EOF
 }
 EOF
 
+cat > kube-proxy-csr.json <<EOF
+{
+  "CN": "system:kube-proxy",
+  "hosts": [],
+  "key": {
+    "algo": "rsa",
+    "size": 2048
+  },
+  "names": [
+    {
+      "C": "CN",
+      "ST": "BeiJing",
+      "L": "BeiJing",
+      "O": "k8s",
+      "OU": "System"
+    }
+  ]
+}
+EOF
+
+
+### 创建kubeconfig文件
+
+ kubectl config set-cluster dashboard --certificate-authority=/etc/kubernetes/pki/ca.crt --server="https://192.168.56.101:6443" --embed-certs=true --kubeconfig=/root/def-ns-dashboard.conf
+
+kubectl config set-credentials def-ns-dashboard-user --kubeconfig=/root/def-ns-dashboard.conf --token=eyJhbGciOiJSUzI1NiIsImtpZCI6ImZXdE54OGhCZVRaY1NOTHF6V1ZnejZaaVB3TUllV0kzZzVyQ3VvemI3d0EifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJrdWJlcm5ldGVzLWRhc2hib2FyZCIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VjcmV0Lm5hbWUiOiJhZG1pbi11c2VyLXRva2VuLWJiYnI5Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZXJ2aWNlLWFjY291bnQubmFtZSI6ImFkbWluLXVzZXIiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC51aWQiOiIyNjUxY2U4NC1mNmY2LTQwZGItYThmNi1kMzNlZmJmNzlmZWEiLCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6a3ViZXJuZXRlcy1kYXNoYm9hcmQ6YWRtaW4tdXNlciJ9.DgWvPpCflfhE6wJTx9b2Ymb3sgXCHDOFd0TleSuueVBuCSz4CgLIfdo7uwC32k4sGjoIapUIIsyTFezib4V9g2ZhW6i3iteSkNNezO7C9DypUMmoc2NdBDgPE-Htl5s80udll_aup0C_e8Q8Dl5yYdoxxQNKULBLLm3uR-o0BvnDS3xtCslaVSEON7vyTfIx8-R9-e8IAK03t5idJkSu1oSPpfheEoSTIju3X_0mBQ8KSunvFmjOflVSeDYstJZP7T52w0eqxEBsYF5rJsU9W8hibn0s29G7xTiotzCVD39TXyjqRDNpt3PMNKZTAxv6FKdu5pDmfIe00WfVV2D0FA
+
+kubectl config set-context def-ns-dashboard-user@dashboard --cluster=dashboard --user=def-ns-dashboard-user --kubeconfig=/root/def-ns-dashboard.conf
+
 
 
 #### delete namespace stay terminating soon
@@ -92,3 +118,5 @@ vi tmp.json  (then delete spec content)
 open new shell then
 kubectl proxy
 curl -k -H "Content-Type: application/json" -X PUT --data-binary @tmp.json http://127.0.0.1:8001/api/v1/namespaces/$(namespace)/finalize
+
+
