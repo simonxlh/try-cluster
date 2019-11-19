@@ -102,7 +102,7 @@ cat > kube-proxy-csr.json <<EOF
 EOF
 
 
-### 创建kubeconfig文件
+### 创建kubeconfig文件 -test push 
 
  kubectl config set-cluster dashboard --certificate-authority=/etc/kubernetes/pki/ca.crt --server="https://192.168.56.101:6443" --embed-certs=true --kubeconfig=/root/def-ns-dashboard.conf
 
