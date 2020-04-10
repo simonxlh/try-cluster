@@ -1,0 +1,5 @@
+kubectl cp team-it/nextcloud-6c8759c6d4-whwgb:/var/www/html/data/nextcloud.log ./nextcloud.log
+kubectl cp playground/app-console-latest-7496db64b-6swch:/etc/nginx/conf.d/default.conf ./default.conf
+
+
+ 

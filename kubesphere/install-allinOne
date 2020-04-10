@@ -1,0 +1,30 @@
+Console: http://10.0.2.15:30880
+Account: admin
+Password: P@88w0rd
+
+
+kubectl get pods -n kubesphere-system| grep Evicted | awk '{print $1}' | xargs kubectl delete pod -n kubesphere-system
+
+创建本地卷
+
+https://ieevee.com/tech/2019/01/17/local-volume.html
+
+拷贝文件
+
+kubectl cp team-it/nextcloud-6c8759c6d4-whwgb:/var/www/html/data/nextcloud.log ./nextcloud.log
+
+
+sudo kubectl -n kubesphere-system create secret generic kubesphere-ca  \
+--from-file=ca.crt= /home/brosoul/.minikube/ca.crt  \
+--from-file=ca.key= /home/brosoul/.minikube/ca.key
+
+sudo kubectl -n kubesphere-monitoring-system create secret generic kube-etcd-client-certs  \
+--from-file=etcd-client-ca.crt=/var/lib/minikube/certs/etcd/ca.crt  \
+--from-file=etcd-client.crt=/var/lib/minikube/certs/etcd/healthcheck-client.crt  \
+--from-file=etcd-client.key=/var/lib/minikube/certs/etcd/healthcheck-client.key
+
+kubectl logs -n kubesphere-system $(kubectl get pod -n kubesphere-system -l app=ks-install -o jsonpath='{.items[0].metadata.name}') -f
+
+
+
+kubectl get job hyperpitrix-release-app-job -n openpitrix-system -o json | jq 'del(.spec.selector)' | jq 'del(.spec.template.metadata.labels)' | kubectl replace --force -f -
