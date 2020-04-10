@@ -1,22 +1,23 @@
 #!/bin/bash
-KUBE_VERSION=v1.16.2
+KUBE_VERSION=v1.15.6
 KUBE_PAUSE_VERSION=3.1
-ETCD_VERSION=3.3.15-0
-DNS_VERSION=1.6.2
+ETCD_VERSION=3.3.10
+DNS_VERSION=1.3.1
 
 TMP_VERSION=v1.10.1
 TMP_NAME=kubernetes-dashboard-amd64
 
 username=registry.cn-hangzhou.aliyuncs.com/google_containers
 
-images=(${TMP_NAME}:${TMP_VERSION}
-#kube-proxy-amd64:${KUBE_VERSION}
-#kube-scheduler-amd64:${KUBE_VERSION}
-#kube-controller-manager-amd64:${KUBE_VERSION}
-#kube-apiserver-amd64:${KUBE_VERSION}
-#pause:${KUBE_PAUSE_VERSION}
-#etcd-amd64:${ETCD_VERSION}
-#coredns:${DNS_VERSION}
+images=(
+    # ${TMP_NAME}:${TMP_VERSION}
+    kube-proxy-amd64:${KUBE_VERSION}
+    kube-scheduler-amd64:${KUBE_VERSION}
+    kube-controller-manager-amd64:${KUBE_VERSION}
+    kube-apiserver-amd64:${KUBE_VERSION}
+    pause:${KUBE_PAUSE_VERSION}
+    etcd-amd64:${ETCD_VERSION}
+    coredns:${DNS_VERSION}
     )
 
 for image in ${images[@]}
